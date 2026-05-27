@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leistungen &amp; Wissen — Griesche Consulting Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --bg-soft: #e6ecf1;
+    --surface: #ffffff;
+    --ink: #0d1b2a;
+    --ink-soft: #354759;
+    --muted: #7a8a9a;
+    --accent: #1e4d6b;
+    --accent-deep: #0c2d44;
+    --accent-soft: #dde8ef;
+    --warm: #c97a4a;
+    --warm-soft: #f5e4d8;
+    --line: #d8e0e7;
+    --shadow: 0 4px 28px rgba(13,27,42,0.05);
+    --shadow-strong: 0 24px 60px rgba(13,27,42,0.15);
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(244, 246, 248, 0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid rgba(216, 224, 231, 0.6);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 24px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-mark {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--accent-deep); color: #fff;
+    display: grid; place-items: center;
+    font-family: 'IBM Plex Serif', serif; font-weight: 600; font-size: 18px;
+  }
+  .logo-text { font-family: 'IBM Plex Serif', serif; font-weight: 500; font-size: 18px; letter-spacing: -0.01em; line-height: 1.1; color: var(--ink); }
+  .logo-text small { display: block; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 10.5px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 3px; }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; font-size: 14px; color: var(--ink-soft); font-weight: 500; transition: color .2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent-deep); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: 8px;
+    font-weight: 500; font-size: 14px; text-decoration: none;
+    transition: transform .15s, box-shadow .2s, background .2s;
+    cursor: pointer; border: none; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent-deep); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(12,45,68,0.25); background: var(--accent); }
+  .btn-warm { background: var(--warm); color: #fff; }
+  .btn-warm:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(201,122,74,0.3); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: var(--surface); border-color: var(--accent); }
+  .btn-lg { padding: 14px 26px; font-size: 14.5px; }
+  @media (max-width: 880px) { .nav-links a:not(.btn) { display: none; } }
+
+  /* ============ PAGE HEADER ============ */
+  .page-header {
+    background: linear-gradient(135deg, var(--accent-deep) 0%, var(--accent) 100%);
+    color: #fff;
+    padding: 90px 0 100px;
+    position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content: ""; position: absolute; right: -200px; top: -200px;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,122,74,0.18) 0%, transparent 65%);
+  }
+  .breadcrumb {
+    font-size: 13px; color: rgba(255,255,255,0.7);
+    margin-bottom: 28px; letter-spacing: 0.04em;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.85); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); }
+  .breadcrumb a:hover { color: #fff; }
+  .breadcrumb .sep { margin: 0 10px; color: rgba(255,255,255,0.4); }
+  .page-header h1 {
+    font-family: 'IBM Plex Serif', serif; font-weight: 500;
+    font-size: clamp(38px, 5.4vw, 60px);
+    line-height: 1.06; letter-spacing: -0.02em;
+    margin: 0 0 22px; max-width: 800px;
+  }
+  .page-header h1 em { font-style: italic; color: var(--warm); font-weight: 500; }
+  .page-header .lead { font-size: 19px; color: rgba(255,255,255,0.82); max-width: 640px; margin: 0; line-height: 1.55; }
+
+  /* ============ TOPIC CARDS ============ */
+  .topics { margin-top: -50px; position: relative; z-index: 2; padding-bottom: 60px; }
+  .topics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .topic-card {
+    background: var(--surface); padding: 26px;
+    border-radius: var(--radius); border: 1px solid var(--line);
+    text-decoration: none; color: inherit;
+    transition: transform .2s, box-shadow .25s, border-color .2s;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .topic-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+  .topic-card .num {
+    font-family: 'IBM Plex Serif', serif; color: var(--warm);
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+  }
+  .topic-card .title {
+    font-family: 'IBM Plex Serif', serif; color: var(--ink);
+    font-size: 17px; font-weight: 600; line-height: 1.25;
+  }
+  .topic-card .arrow {
+    margin-top: auto; color: var(--accent); font-size: 14px; font-weight: 600;
+  }
+  @media (max-width: 960px) { .topics-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .topics-grid { grid-template-columns: 1fr; } }
+
+  /* ============ LAYOUT WITH TOC ============ */
+  .layout {
+    display: grid; grid-template-columns: 240px 1fr;
+    gap: 60px; padding: 60px 0 100px;
+  }
+  .toc {
+    position: sticky; top: 90px; align-self: start;
+    max-height: calc(100vh - 110px); overflow-y: auto;
+  }
+  .toc-title {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700; margin-bottom: 16px;
+  }
+  .toc ul { list-style: none; padding: 0; margin: 0; }
+  .toc li { margin: 0; }
+  .toc a {
+    display: block; padding: 9px 14px;
+    text-decoration: none; color: var(--ink-soft);
+    font-size: 13.5px; font-weight: 500; line-height: 1.4;
+    border-left: 2px solid transparent;
+    transition: color .2s, border-color .2s, background .2s;
+    border-radius: 0 6px 6px 0;
+  }
+  .toc a:hover { color: var(--accent-deep); background: var(--accent-soft); }
+  .toc a.active { color: var(--accent-deep); border-left-color: var(--warm); font-weight: 600; background: var(--accent-soft); }
+  @media (max-width: 920px) {
+    .layout { grid-template-columns: 1fr; gap: 0; }
+    .toc { display: none; }
+  }
+
+  /* ============ CONTENT ============ */
+  .content { max-width: 760px; scroll-margin-top: 80px; }
+  .content > section { scroll-margin-top: 80px; padding-bottom: 80px; }
+  .content > section + section { border-top: 1px solid var(--line); padding-top: 80px; }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--warm); font-weight: 700; margin-bottom: 14px;
+  }
+  h2 {
+    font-family: 'IBM Plex Serif', serif; font-weight: 500;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.15; letter-spacing: -0.01em;
+    margin: 0 0 24px; color: var(--ink);
+  }
+  h3 {
+    font-family: 'IBM Plex Serif', serif; font-weight: 600;
+    font-size: 22px; margin: 36px 0 14px; color: var(--ink);
+  }
+  .content p {
+    font-size: 17px; color: var(--ink-soft); margin: 0 0 20px; line-height: 1.7;
+  }
+  .lead-p { font-size: 19px !important; color: var(--ink) !important; font-weight: 400; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  /* Pull-Quote */
+  .pull-quote {
+    margin: 40px -20px;
+    padding: 32px 36px;
+    background: var(--accent-deep); color: #fff;
+    border-radius: var(--radius);
+    position: relative;
+  }
+  .pull-quote::before {
+    content: "„"; font-family: 'IBM Plex Serif', serif;
+    color: var(--warm); font-size: 70px; line-height: 0;
+    position: absolute; top: 36px; left: 20px; opacity: 0.6;
+  }
+  .pull-quote p {
+    font-family: 'IBM Plex Serif', serif;
+    color: #fff !important; font-size: 19px !important;
+    line-height: 1.45 !important; font-style: italic;
+    margin: 0 !important; padding-left: 28px;
+  }
+  @media (max-width: 600px) { .pull-quote { margin: 32px 0; padding: 28px 24px; } }
+
+  /* Fact-Box (Statistik/Hervorhebung) */
+  .factbox {
+    background: var(--surface); border: 1px solid var(--line);
+    border-left: 3px solid var(--warm);
+    padding: 22px 26px; border-radius: var(--radius-sm);
+    margin: 30px 0;
+  }
+  .factbox .label {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--warm); font-weight: 700; margin-bottom: 6px;
+  }
+  .factbox p { margin: 0; font-size: 16px; }
+
+  /* Eigenschaften-Grid */
+  .traits-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 32px 0;
+  }
+  .trait {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px 24px;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .trait:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow); }
+  .trait-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent-deep);
+    display: grid; place-items: center; margin-bottom: 14px;
+  }
+  .trait h4 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 16.5px; font-weight: 600;
+    margin: 0 0 8px; color: var(--ink);
+    line-height: 1.3;
+  }
+  .trait p { font-size: 14.5px !important; margin: 0 !important; line-height: 1.55 !important; }
+  @media (max-width: 700px) { .traits-grid { grid-template-columns: 1fr; } }
+
+  /* Fachkräfte-Steps */
+  .step-block {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 24px; margin: 0 0 32px;
+    align-items: start;
+  }
+  .step-num-big {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: var(--warm); color: #fff;
+    display: grid; place-items: center;
+    font-family: 'IBM Plex Serif', serif; font-size: 20px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .step-block h3 { margin-top: 6px; }
+  @media (max-width: 600px) {
+    .step-block { grid-template-columns: 44px 1fr; gap: 16px; }
+    .step-num-big { width: 40px; height: 40px; font-size: 16px; }
+  }
+
+  /* Konditionen-Tabelle */
+  .price-table {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--line); overflow: hidden;
+    margin: 24px 0;
+  }
+  .price-row {
+    display: grid; grid-template-columns: 1.4fr 1fr;
+    padding: 18px 24px; border-bottom: 1px solid var(--line);
+    align-items: center; font-size: 15px;
+  }
+  .price-row:last-child { border-bottom: none; }
+  .price-row.section-head {
+    background: var(--accent-soft); color: var(--accent-deep);
+    font-family: 'IBM Plex Serif', serif; font-weight: 600;
+    font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .price-row .item { color: var(--ink); }
+  .price-row .val { color: var(--accent-deep); font-family: 'IBM Plex Serif', serif; font-weight: 600; text-align: right; }
+  @media (max-width: 500px) { .price-row { grid-template-columns: 1fr; gap: 4px; } .price-row .val { text-align: left; } }
+
+  /* Inline-CTA-Card */
+  .inline-cta {
+    background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+    color: #fff; padding: 32px 36px; border-radius: var(--radius);
+    margin: 40px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 28px; flex-wrap: wrap;
+  }
+  .inline-cta h4 {
+    font-family: 'IBM Plex Serif', serif; font-size: 22px;
+    margin: 0 0 6px; color: #fff; font-weight: 500;
+  }
+  .inline-cta p {
+    margin: 0 !important; color: rgba(255,255,255,0.78) !important;
+    font-size: 15px !important;
+  }
+  .inline-cta .btn-warm { flex-shrink: 0; }
+
+  /* ============ KONTAKT ============ */
+  .contact { background: var(--accent-deep); color: #e8f0f5; padding: 90px 0 60px; position: relative; overflow: hidden; }
+  .contact::before { content: ""; position: absolute; left: -100px; bottom: -100px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(201,122,74,0.15) 0%, transparent 70%); }
+  .contact-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; position: relative; }
+  .contact h2 { font-family: 'IBM Plex Serif', serif; font-size: clamp(26px, 3.2vw, 38px); margin: 0 0 18px; font-weight: 500; letter-spacing: -0.01em; color: #fff; }
+  .contact p { color: rgba(232,240,245,0.75); margin: 0 0 28px; font-size: 16px; }
+  .contact-info { display: grid; gap: 12px; }
+  .contact-info-row { display: flex; gap: 14px; align-items: center; font-size: 14.5px; color: rgba(232,240,245,0.92); }
+  .contact-info-row a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(232,240,245,0.25); }
+  .contact-info-row a:hover { border-color: rgba(232,240,245,0.7); }
+  .contact-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(232,240,245,0.08); color: #e8f0f5;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  @media (max-width: 920px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  .footer { background: #061a2b; color: rgba(232,240,245,0.55); padding: 24px 0; font-size: 13px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .footer a { color: rgba(232,240,245,0.75); text-decoration: none; margin-left: 18px; }
+  .footer a:hover { color: #fff; }
+
+  .sketch-banner {
+    background: var(--ink); color: rgba(255,255,255,0.85);
+    text-align: center; padding: 8px 16px; font-size: 12px; letter-spacing: 0.04em;
+  }
+  .sketch-banner strong { color: #fff; font-weight: 600; }
+  .sketch-banner em { color: var(--warm); font-style: normal; font-weight: 600; margin: 0 6px; }
+
+  .ic { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div class="sketch-banner">
+  <strong>Unterseite Leistungen &amp; Wissen</strong> <em>·</em> Vollständiger Originalinhalt aus griescheconsulting.ch/leistungen
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="griesche-redesign-v3.html" class="logo">
+      <div class="logo-mark">G</div>
+      <div class="logo-text">Griesche Consulting<small>Coaching · Beratung · Mentor</small></div>
+    </a>
+    <nav class="nav-links">
+      <a href="griesche-redesign-v3.html">Start</a>
+      <a href="#" class="active">Leistungen</a>
+      <a href="griesche-redesign-v3.html#fachkraefte">Unternehmen</a>
+      <a href="griesche-redesign-v3.html#beirat">Beirat</a>
+      <a href="griesche-redesign-v3.html#kontakt">Kontakt</a>
+      <a href="griesche-redesign-v3.html#buchung" class="btn btn-warm">Termin buchen</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ PAGE HEADER ============ -->
+<section class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="griesche-redesign-v3.html">Start</a>
+      <span class="sep">/</span>
+      Leistungen &amp; Wissen
+    </div>
+    <h1>Leistungen, <em>Wissen</em>, Konditionen.</h1>
+    <p class="lead">Alles, was du über AD(H)S, Neurodivergenz und die Begleitung bei Griesche Consulting wissen solltest — auf einer Seite, sortiert nach Themen.</p>
+  </div>
+</section>
+
+<!-- ============ TOPIC CARDS ============ -->
+<div class="container topics">
+  <div class="topics-grid">
+    <a href="#was-ist-adhs" class="topic-card">
+      <span class="num">01</span>
+      <span class="title">Was ist AD(H)S?</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#diagnosen" class="topic-card">
+      <span class="num">02</span>
+      <span class="title">Warum steigen die Diagnosen?</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#gemeinsamkeiten" class="topic-card">
+      <span class="num">03</span>
+      <span class="title">Gemeinsamkeiten neurodivergenter Menschen</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#reizverarbeitung" class="topic-card">
+      <span class="num">04</span>
+      <span class="title">Wie Reize anders erlebt werden</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#unternehmen" class="topic-card">
+      <span class="num">05</span>
+      <span class="title">Bedeutung für Unternehmen</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#fachkraefte" class="topic-card">
+      <span class="num">06</span>
+      <span class="title">Fachkräftemangel</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="#konditionen" class="topic-card">
+      <span class="num">07</span>
+      <span class="title">Konditionen &amp; Preise</span>
+      <span class="arrow">Lesen →</span>
+    </a>
+    <a href="griesche-redesign-v3.html#buchung" class="topic-card" style="background: var(--accent-deep); color: #fff; border-color: var(--accent-deep);">
+      <span class="num" style="color: var(--warm);">→</span>
+      <span class="title" style="color: #fff;">Direkt Termin buchen</span>
+      <span class="arrow" style="color: var(--warm);">Zur Buchung →</span>
+    </a>
+  </div>
+</div>
+
+<!-- ============ LAYOUT WITH TOC ============ -->
+<div class="container layout">
+  <aside class="toc">
+    <div class="toc-title">Auf dieser Seite</div>
+    <ul>
+      <li><a href="#was-ist-adhs" data-toc="was-ist-adhs">Was ist AD(H)S?</a></li>
+      <li><a href="#diagnosen" data-toc="diagnosen">Warum steigen die Diagnosen?</a></li>
+      <li><a href="#gemeinsamkeiten" data-toc="gemeinsamkeiten">Gemeinsamkeiten</a></li>
+      <li><a href="#reizverarbeitung" data-toc="reizverarbeitung">Reizverarbeitung</a></li>
+      <li><a href="#unternehmen" data-toc="unternehmen">Für Unternehmen</a></li>
+      <li><a href="#fachkraefte" data-toc="fachkraefte">Fachkräftemangel</a></li>
+      <li><a href="#konditionen" data-toc="konditionen">Konditionen</a></li>
+    </ul>
+  </aside>
+
+  <article class="content">
+
+    <!-- ============ WAS IST ADHS ============ -->
+    <section id="was-ist-adhs">
+      <span class="section-tag">01 · Grundlagen</span>
+      <h2>Was ist AD(H)S?</h2>
+
+      <p class="lead-p">AD(H)S steht für Aufmerksamkeitsdefizit-/Hyperaktivitätsstörung. AD(H)S ist weder eine „Modeerscheinung" noch eine Erfindung der Pharmaindustrie.</p>
+
+      <p>Vereinfacht erklärt handelt es sich um eine besondere Art der Hirnfunktion beziehungsweise der Informationsverarbeitung. Dabei verarbeitet das Gehirn Reize, Informationen und Aufmerksamkeit anders als bei neurotypischen Menschen. Besonders betroffen sind häufig die Bereiche <strong>Konzentration, Impulskontrolle, Reizverarbeitung</strong> und die sogenannte <strong>Exekutivfunktion</strong> — also die Fähigkeit, Aufgaben zu planen, zu strukturieren und Prioritäten zu setzen.</p>
+
+      <div class="factbox">
+        <div class="label">Vererbbarkeit</div>
+        <p>Die Veranlagung wird häufig genetisch weitergegeben. Studien gehen davon aus, dass die <strong>Vererbbarkeit bei rund 70 %</strong> liegt. Wissenschaftliche Untersuchungen zeigen zudem, dass bestimmte Botenstoffe im Gehirn, insbesondere Dopamin und Noradrenalin, bei Menschen mit AD(H)S anders reguliert werden.</p>
+      </div>
+
+      <h3>Mädchen und Frauen werden seltener erkannt</h3>
+      <p>Jungen werden deutlich häufiger diagnostiziert als Mädchen. Bei Mädchen und Frauen bleibt AD(H)S jedoch oft lange unerkannt, da sich die Symptome häufig weniger durch sichtbare Hyperaktivität, sondern eher durch <strong>innere Unruhe, emotionale Erschöpfung, Konzentrationsprobleme oder Überanpassung</strong> zeigen. Dadurch dürfte die Dunkelziffer bei Mädchen und Frauen deutlich höher sein.</p>
+
+      <div class="factbox">
+        <div class="label">Verbreitung</div>
+        <p>Heute geht die Fachwelt davon aus, dass etwa <strong>5–7 % der Bevölkerung</strong> von AD(H)S beziehungsweise neurodivergenten Ausprägungen betroffen sind.</p>
+      </div>
+
+      <p>Viele Betroffene verfügen gleichzeitig über besondere Stärken wie <strong>Kreativität, hohe Empathie, schnelle Denkprozesse, starke Lösungsorientierung</strong> oder die Fähigkeit, sich bei Interesse aussergewöhnlich intensiv auf Themen zu fokussieren.</p>
+    </section>
+
+    <!-- ============ DIAGNOSEN ============ -->
+    <section id="diagnosen">
+      <span class="section-tag">02 · Einordnung</span>
+      <h2>Warum steigen die Diagnosen?</h2>
+
+      <p>Seit den späten 1990er-Jahren wird gezielter und differenzierter diagnostiziert. Das Bewusstsein für AD(H)S und Neurodivergenz ist gestiegen, wodurch mehr Menschen erkannt und begleitet werden können.</p>
+
+      <p>Die steigenden Zahlen bedeuten deshalb nicht zwingend, dass AD(H)S häufiger vorkommt — sondern vor allem, dass heute genauer hingeschaut wird. Wie bereits erwähnt, geht die Fachwelt davon aus, dass etwa <strong>5–7 % der Bevölkerung</strong> betroffen sind.</p>
+    </section>
+
+    <!-- ============ GEMEINSAMKEITEN ============ -->
+    <section id="gemeinsamkeiten">
+      <span class="section-tag">03 · Persönlichkeit</span>
+      <h2>Haben neurodivergente Menschen Gemeinsamkeiten?</h2>
+
+      <p class="lead-p">Jeder Mensch ist individuell. Deshalb gilt auch bei AD(H)S der Satz: „Kennst du einen Betroffenen, dann kennst du genau einen."</p>
+
+      <p>Trotzdem gibt es gewisse Gemeinsamkeiten, die bei vielen neurodivergenten Menschen beobachtet werden können — allerdings in ganz unterschiedlicher Ausprägung. Moderne Forschung zeigt, dass neurodivergente Menschen Informationen, Reize und Emotionen häufig anders verarbeiten als neurotypische Menschen.</p>
+
+      <div class="pull-quote">
+        <p>Viele Herausforderungen entstehen nicht durch mangelnde Fähigkeiten, sondern durch Umgebungen, die wenig auf unterschiedliche Denk- und Arbeitsweisen ausgerichtet sind.</p>
+      </div>
+
+      <p>Wer diese Besonderheiten versteht, kann gezielt darauf eingehen und Rahmenbedingungen schaffen, die den Alltag und insbesondere das Berufsleben erleichtern.</p>
+
+      <h3>Mögliche Gemeinsamkeiten</h3>
+
+      <div class="traits-grid">
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <h4>Ausgeprägtes Gerechtigkeitsempfinden</h4>
+          <p>Viele neurodivergente Menschen reagieren besonders sensibel auf Ungerechtigkeit, unklare Regeln oder respektlosen Umgang. Werte wie Fairness, Ehrlichkeit und Transparenz haben oft einen hohen Stellenwert.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h4>Hohe Hilfsbereitschaft &amp; Engagement</h4>
+          <p>Häufig zeigen Betroffene ein starkes Verantwortungsgefühl und investieren viel Energie in Aufgaben, Projekte oder Beziehungen. Gerade im Berufsleben übernehmen sie oft mehr Verantwortung als erwartet.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h4>Gefahr von Überforderung oder Burnout</h4>
+          <p>Durch permanente Reizverarbeitung, hohen inneren Druck oder ständiges Bemühen, sich anzupassen („Masking"), besteht erhöhtes Risiko für Erschöpfung, Stress oder Burnout. Viele kompensieren über lange Zeit, ohne dass das Umfeld es bemerkt.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          </div>
+          <h4>Multitasking- &amp; Krisenfähigkeit</h4>
+          <p>Viele können in hektischen oder dynamischen Situationen sehr schnell reagieren, flexibel denken und mehrere Informationen gleichzeitig verarbeiten. Unter Zeitdruck entstehen oft kreative, lösungsorientierte Ansätze.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h4>Hohe Loyalität gegenüber Arbeitgebern</h4>
+          <p>Wenn Wertschätzung, Vertrauen und passende Rahmenbedingungen vorhanden sind, zeigen viele Betroffene eine hohe Identifikation mit ihrem Unternehmen sowie ein starkes Pflichtbewusstsein.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <h4>Hyperfokus bei Interesse</h4>
+          <p>Bei Themen, die Interesse oder Begeisterung auslösen, können neurodivergente Menschen überdurchschnittlich konzentriert, detailorientiert und ausdauernd arbeiten. Zeit und Umgebung werden dabei kaum noch wahrgenommen.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <h4>Erhöhte Sensibilität gegenüber Reizen</h4>
+          <p>Geräusche, Licht, Gerüche, Gespräche oder visuelle Eindrücke werden oft intensiver wahrgenommen. Grossraumbüros, ständige Unterbrechungen oder hohe Geräuschkulissen führen schneller zu Überforderung.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M2 3h20v18H2z"/><path d="M2 9h20M9 21V9"/></svg>
+          </div>
+          <h4>Kreatives &amp; vernetztes Denken</h4>
+          <p>Viele denken weniger linear und erkennen Zusammenhänge, Muster oder Lösungswege, die anderen nicht sofort auffallen. „Out-of-the-box-Denken" ist eine grosse Stärke in kreativen, strategischen und innovativen Bereichen.</p>
+        </div>
+
+        <div class="trait">
+          <div class="trait-icon">
+            <svg class="ic" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </div>
+          <h4>Schwierigkeiten mit Routine</h4>
+          <p>Wiederholende Tätigkeiten ohne Sinnbezug können besonders belastend sein. Motivation entsteht stärker durch Interesse, Sinnhaftigkeit und Begeisterung als durch reine Pflichterfüllung.</p>
+        </div>
+      </div>
+
+      <p>Diese Eigenschaften sind weder ausschliesslich positiv noch negativ zu bewerten. Entscheidend ist immer die individuelle Ausprägung sowie das Umfeld, in dem ein Mensch lebt und arbeitet. <strong>Mit Verständnis, klarer Kommunikation und passenden Rahmenbedingungen können neurodivergente Menschen ihre Stärken oft besonders gut entfalten.</strong></p>
+
+      <div class="inline-cta">
+        <div>
+          <h4>Kostenloses Erstgespräch</h4>
+          <p>Lass uns unverbindlich austauschen — als Betroffene/r oder als Unternehmen.</p>
+        </div>
+        <a href="griesche-redesign-v3.html#buchung" class="btn btn-warm btn-lg">Termin buchen
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ REIZVERARBEITUNG ============ -->
+    <section id="reizverarbeitung">
+      <span class="section-tag">04 · Erleben</span>
+      <h2>Wie erleben neurodivergente Menschen ihre Umwelt?</h2>
+
+      <p class="lead-p">Vereinfacht dargestellt verarbeitet ein neurodivergentes Gehirn Reize oft anders als ein neurotypisches Gehirn.</p>
+
+      <p>Während du diesen Text liest, nimmst du möglicherweise gleichzeitig Geräusche, Gerüche oder Bewegungen aus deiner Umgebung wahr: <strong>Musik vom Nachbarhaus, Gespräche, Kinderstimmen, das Klirren von Gläsern</strong> oder andere Hintergrundgeräusche. Ein neurotypisches Gehirn kann viele dieser Reize automatisch filtern und als „unwichtig" ausblenden, damit der Fokus auf dem Lesen bleibt.</p>
+
+      <p>Bei vielen neurodivergenten Menschen funktioniert diese Reizfilterung jedoch anders. Geräusche, Gerüche, Lichtreize oder Bewegungen gelangen <strong>oft gleichzeitig und ungefiltert ins Bewusstsein</strong>. Das Gehirn muss dadurch deutlich mehr Informationen gleichzeitig verarbeiten.</p>
+
+      <div class="pull-quote">
+        <p>Diese permanente Reizverarbeitung kann sehr anstrengend sein und zu Überforderung, innerer Unruhe, Erschöpfung oder erhöhter Reizbarkeit führen.</p>
+      </div>
+
+      <p>Für das Umfeld ist dies nicht immer sofort sichtbar, für Betroffene jedoch oft tägliche Realität.</p>
+    </section>
+
+    <!-- ============ UNTERNEHMEN ============ -->
+    <section id="unternehmen">
+      <span class="section-tag">05 · Arbeitswelt</span>
+      <h2>Was bedeutet das für Unternehmen und Arbeitgeber?</h2>
+
+      <p class="lead-p">Neurodivergente Mitarbeitende bringen häufig grosses Potenzial, Engagement und Loyalität mit. Gerade in Zeiten des Fachkräftemangels eine wertvolle Ressource.</p>
+
+      <p>Internationale Studien und Erfahrungen aus der Praxis zeigen, dass vielfältig zusammengesetzte Teams oft kreativer arbeiten, innovative Lösungen entwickeln und unterschiedliche Perspektiven besser einbringen können.</p>
+
+      <p>Viele neurodivergente Menschen verfügen über besondere Stärken wie <strong>analytisches Denken, hohe Detailgenauigkeit, kreative Problemlösung, ausgeprägte Konzentrationsfähigkeit bei interessanten Aufgaben sowie ein starkes Verantwortungsbewusstsein</strong>. Gleichzeitig zeigen viele Betroffene eine hohe Motivation und Loyalität, wenn sie sich verstanden und wertgeschätzt fühlen.</p>
+
+      <h3>Wo Herausforderungen entstehen</h3>
+      <p>Herausforderungen entstehen häufig nicht aufgrund fehlender Kompetenz, sondern durch Arbeitsbedingungen, die wenig flexibel gestaltet sind. Dazu gehören beispielsweise <strong>ständige Unterbrechungen, unklare Kommunikation, hohe Reizbelastung, fehlende Strukturen oder unrealistische Erwartungen</strong> im Arbeitsalltag.</p>
+
+      <div class="factbox">
+        <div class="label">Schon kleine Anpassungen helfen</div>
+        <p>Klare und transparente Kommunikation · strukturierte Arbeitsabläufe und realistische Prioritäten · flexible Arbeitsmodelle oder Rückzugsmöglichkeiten · reduzierte Reizbelastung am Arbeitsplatz · Verständnis für unterschiedliche Arbeits- und Denkweisen · gezielte Nutzung individueller Stärken.</p>
+      </div>
+
+      <p>Unternehmen, die sich aktiv mit Neurodivergenz beschäftigen, fördern nicht nur Inklusion und Mitarbeiterzufriedenheit, sondern profitieren häufig auch von <strong>geringerer Fluktuation, höherer Motivation und einem gesünderen Arbeitsklima</strong>.</p>
+
+      <h3>Genau dabei unterstütze ich dich</h3>
+      <p>Gemeinsam entwickeln wir passende Massnahmen, um neurodivergente Mitarbeitende besser zu verstehen, ihre Stärken gezielt zu fördern und ein gesundes, wertschätzendes sowie produktives Arbeitsumfeld zu schaffen. Dabei geht es nicht um Sonderbehandlungen, sondern um <strong>praktikable Lösungen</strong>, die sowohl den Mitarbeitenden als auch dem Unternehmen langfristig zugutekommen.</p>
+    </section>
+
+    <!-- ============ FACHKRÄFTEMANGEL ============ -->
+    <section id="fachkraefte">
+      <span class="section-tag">06 · Strategie</span>
+      <h2>Fachkräftemangel — die Arbeitswelt verändert sich.</h2>
+
+      <p class="lead-p">Bist du vorbereitet? Fachkräftemangel, neue Arbeitsmodelle und ungenutzte Potenziale stellen Unternehmen vor neue Herausforderungen.</p>
+
+      <p>Wir unterstützen Unternehmen dabei, neue Wege zu erkennen — besonders im Bereich ADHS, Neurodivergenz und moderne Mitarbeitergewinnung.</p>
+
+      <div class="step-block">
+        <div class="step-num-big">1</div>
+        <div>
+          <h3>Fachkräftemangel ist längst Realität</h3>
+          <p>Bis 2040 werden im deutschsprachigen Raum Millionen Fachkräfte fehlen: <strong>Deutschland rund 10 Mio., Österreich und die Schweiz je rund 1 Million.</strong> Viele Unternehmen spüren die Auswirkungen bereits heute: offene Stellen bleiben lange unbesetzt, Teams geraten unter Druck, Wissen geht verloren, Belastung und Fluktuation steigen.</p>
+          <p>Die entscheidende Frage lautet: <strong>Wartest du ab — oder handelst du heute?</strong></p>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num-big">2</div>
+        <div>
+          <h3>Die Lösung liegt oft dort, wo niemand sucht</h3>
+          <p>Viele Unternehmen konzentrieren sich weiterhin auf klassische Lebensläufe und alte Arbeitsmodelle. Enormes Potenzial bleibt dadurch ungenutzt:</p>
+          <p>Menschen mit ADHS und Neurodivergenz · Quereinsteiger · Wiedereinsteiger · Teilzeitmodelle · Mitarbeitende Ü50.</p>
+          <p><strong>Wer umdenkt, gewinnt nicht nur Mitarbeitende — sondern neue Perspektiven, Loyalität und Innovationskraft.</strong></p>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num-big">3</div>
+        <div>
+          <h3>ADHS im Berufsalltag verstehen</h3>
+          <p>Menschen mit ADHS bringen oft aussergewöhnliche Fähigkeiten mit: <strong>Kreativität, schnelle Auffassungsgabe, Lösungsorientierung, Hyperfokus, hohe Energie und Begeisterungsfähigkeit.</strong></p>
+          <p>Trotzdem werden viele falsch eingeschätzt oder nicht passend eingesetzt. Wir helfen Unternehmen dabei: neurodivergente Mitarbeitende besser zu verstehen · vorhandene Potenziale sichtbar zu machen · Arbeitsumfelder sinnvoll anzupassen · Stärken statt Defizite in den Fokus zu stellen.</p>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num-big">4</div>
+        <div>
+          <h3>Praxisnah. Menschlich. Lösungsorientiert.</h3>
+          <p>Wir begleiten Unternehmen bei Themen wie: Fachkräftemangel · Mitarbeiterbindung · moderne Arbeitsmodelle · ADHS &amp; Neurodivergenz · Potenzialentwicklung · Sensibilisierung von Führungskräften · neue Recruiting-Denkweisen.</p>
+          <p>Nicht mit Standardlösungen — sondern <strong>individuell und realitätsnah</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num-big">5</div>
+        <div>
+          <h3>Was die besten Fachkräfte heute suchen</h3>
+          <p>Sie suchen nicht nur einen Job, sie entscheiden, wo sie arbeiten wollen. Sie suchen <strong>Verständnis, Flexibilität, Wertschätzung, Sinn</strong> — und ein Umfeld, in dem sie funktionieren können.</p>
+          <p>Unternehmen, die das erkennen, werden langfristig erfolgreicher sein.</p>
+        </div>
+      </div>
+
+      <div class="pull-quote">
+        <p>Nicht jede Stärke ist auf den ersten Blick sichtbar. Nicht jeder perfekte Mitarbeitende passt in ein klassisches Raster. Die Zukunft gehört Unternehmen, die Potenziale erkennen, bevor andere sie sehen.</p>
+      </div>
+
+      <div class="inline-cta">
+        <div>
+          <h4>Lass uns darüber sprechen.</h4>
+          <p>Neue Wege im Umgang mit Fachkräftemangel? ADHS und Neurodivergenz im Unternehmen besser nutzen?</p>
+        </div>
+        <a href="griesche-redesign-v3.html#buchung" class="btn btn-warm btn-lg">Unverbindlich austauschen
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ KONDITIONEN ============ -->
+    <section id="konditionen">
+      <span class="section-tag">07 · Investition</span>
+      <h2>Konditionen.</h2>
+
+      <p class="lead-p">Transparente Preise, übernommen aus der bestehenden Webseite.</p>
+
+      <h3>Coaching-Gespräche für Privatpersonen</h3>
+      <div class="price-table">
+        <div class="price-row">
+          <div class="item">Einzel-Coaching · Erstgespräch</div>
+          <div class="val">Fr. 75.– / Std.</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Jede weitere Einzelstunde</div>
+          <div class="val">Fr. 150.– / Std.</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Paketpreis · 5 Stunden</div>
+          <div class="val">Fr. 700.–</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Paketpreis · 10 Stunden</div>
+          <div class="val">Fr. 1'200.–</div>
+        </div>
+      </div>
+
+      <h3>Konditionen nach Zielgruppe</h3>
+      <div class="price-table">
+        <div class="price-row">
+          <div class="item">Für Schüler und Studenten</div>
+          <div class="val" style="font-size: 14px;">Wir finden eine Lösung</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Einzelpersonen — Zahlung</div>
+          <div class="val" style="font-size: 14px;">Bar, Twint oder im Voraus</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Firmen</div>
+          <div class="val" style="font-size: 14px;">Auf Mandatsbasis · 2/3 voraus</div>
+        </div>
+        <div class="price-row">
+          <div class="item">Info-Anlässe</div>
+          <div class="val" style="font-size: 14px;">Halb- &amp; Ganztagespauschale</div>
+        </div>
+      </div>
+
+      <div class="factbox">
+        <div class="label">Bankverbindung</div>
+        <p>GriescheConsulting · Raiffeisenbank Thunersee, Burgstrasse 20, CH-3600 Thun · IBAN <strong>CH25 8080 8001 9895 8857 6</strong></p>
+      </div>
+
+      <div class="inline-cta">
+        <div>
+          <h4>Bereit für den nächsten Schritt?</h4>
+          <p>Vereinbare jetzt dein kostenloses Erstgespräch.</p>
+        </div>
+        <a href="griesche-redesign-v3.html#buchung" class="btn btn-warm btn-lg">Termin buchen
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+  </article>
+</div>
+
+<!-- ============ KONTAKT ============ -->
+<section class="contact" id="kontakt">
+  <div class="container contact-grid">
+    <div>
+      <div class="section-tag" style="color:#c97a4a;">Kontakt</div>
+      <h2>Lass uns unverbindlich austauschen.</h2>
+      <p>Du möchtest neue Wege im Umgang mit Fachkräftemangel gehen oder AD(H)S und Neurodivergenz im Unternehmen besser verstehen und nutzen? Vereinbare noch heute dein kostenloses Erstgespräch.</p>
+      <a href="griesche-redesign-v3.html#buchung" class="btn btn-warm btn-lg">Termin direkt buchen
+        <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="contact-info">
+      <div class="contact-info-row">
+        <div class="contact-icon"><svg class="ic" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div>Rolf Griesche<br/>Sonnmattweg 3, CH-3604 Thun</div>
+      </div>
+      <div class="contact-info-row">
+        <div class="contact-icon"><svg class="ic" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <a href="tel:+41796285744">+41 79 628 57 44</a>
+      </div>
+      <div class="contact-info-row">
+        <div class="contact-icon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <a href="mailto:info@griescheconsulting.ch">info@griescheconsulting.ch</a>
+      </div>
+      <div class="contact-info-row">
+        <div class="contact-icon"><svg class="ic" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <a href="https://www.linkedin.com/in/rolf-griesche-66b622a0/" target="_blank" rel="noopener">linkedin.com/in/rolf-griesche</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>© Griesche Consulting · Coaching und Beratung · Thun</div>
+    <div>
+      <a href="griesche-redesign-v3.html">Start</a>
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Active-Link-Detection für TOC via Intersection Observer */
+const tocLinks = document.querySelectorAll('.toc a');
+const sections = document.querySelectorAll('.content > section');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocLinks.forEach(l => {
+        l.classList.toggle('active', l.dataset.toc === id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
